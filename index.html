@@ -15,8 +15,47 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <script>
+        (function () {
+            // Save original console methods
+            const originalConsole = {
+                log: console.log,
+                warn: console.warn,
+                error: console.error,
+                info: console.info,
+            };
+
+            // Override console methods
+            console.log = function (...args) {
+                originalConsole.log("Tampered Log:", ...args);
+            };
+
+            console.warn = function (...args) {
+                originalConsole.warn("Tampered Warning:", ...args);
+            };
+
+            console.error = function (...args) {
+                originalConsole.error("Tampered Error:", ...args);
+            };
+
+            console.info = function (...args) {
+                originalConsole.info("Tampered Info:", ...args);
+            };
+
+            // Example of a custom method
+            console.custom = function (message) {
+                originalConsole.log("Custom Method:", message);
+            };
+
+            // Notify tampering
+            console.log("Console tampering has been applied!");
+        })();
+    </script>
     <script type="module">
-      import { getBrowserData, getriskData } from './index.mjs'
+      import DeviceIntelligence   from 'https://vssdk-prod.cashfree.com/device-intel-js-sdk/0.0.1/index.mjs'
+      console.log(DeviceIntelligence,"DeviceIntelligence")
+
+      const { getBrowserData, getRiskData,getEncodedDeviceData }=DeviceIntelligence
 
       let browserInfo = {
         device_type: 'Screen Information either mobile or desktop',
@@ -41,15 +80,16 @@
         gpu_renderer: 'GPU Information',
         canvas_device_fingerprint: 'Canvas device finger print',
         private_browser: 'Private browser detection',
-        web_rtc_ips:'Web RTC ips',
-        audio_fingerprint:'Audio finger print',
-        architecture:'Architecture'
+        web_rtc_ips: 'Web RTC ips',
+        audio_fingerprint: 'Audio finger print',
+        architecture: 'Architecture',
+        is_dev_tool_open: 'Is Dev tool open',
       }
 
       let riskInfo = {
         installed_bots: 'List of installed bots',
         high_activity: 'check the device activity',
-        vpn_time_zone_mismatch_ist: 'VPN Detection:Time Zone Mismatch',
+        // vpn_time_zone_mismatch_ist: 'VPN Detection:Time Zone Mismatch',
         user_ip: 'User IP',
         tampering_detection: 'Tampering activities have been detected',
         virtual_machine_detection: 'Virtaul machine detection',
@@ -57,8 +97,9 @@
         privacy_browsers: 'Privacy browsers (Tor Exit Node)',
         visitor_id: 'Unique Visitor Id',
         session_id: 'Unique Session Id',
-        browser_anti_finger_printing_extension:'Browser Anti Finger Printing Extension',
-        internet_type:"Wi-Fi (public/private), Mobile, LAN",
+        browser_anti_finger_printing_extension:
+          'Browser Anti Finger Printing Extension',
+        internet_type: 'Wi-Fi (public/private), Mobile, LAN',
       }
 
       async function fetchData() {
@@ -79,7 +120,7 @@
             tableBody.appendChild(tr)
           }
 
-          let riskData = await getriskData()
+          let riskData = await getRiskData()
 
           let riskTableBody = document.getElementById('risk-data-table')
           for (const key in riskData) {
@@ -95,6 +136,9 @@
             tr.appendChild(td3)
             riskTableBody.appendChild(tr)
           }
+
+          const dataBase64=await getEncodedDeviceData()
+
         } catch (error) {
           console.error('Error fetching data:', error)
         }
