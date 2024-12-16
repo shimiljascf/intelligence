@@ -15,50 +15,12 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
-    <!-- <script>
-        (function () {
-            // Save original console methods
-            const originalConsole = {
-                log: console.log,
-                warn: console.warn,
-                error: console.error,
-                info: console.info,
-            };
-
-            // Override console methods
-            console.log = function (...args) {
-                originalConsole.log("Tampered Log:", ...args);
-            };
-
-            console.warn = function (...args) {
-                originalConsole.warn("Tampered Warning:", ...args);
-            };
-
-            console.error = function (...args) {
-                originalConsole.error("Tampered Error:", ...args);
-            };
-
-            console.info = function (...args) {
-                originalConsole.info("Tampered Info:", ...args);
-            };
-
-            // Example of a custom method
-            console.custom = function (message) {
-                originalConsole.log("Custom Method:", message);
-            };
-
-            // Notify tampering
-            console.log("Console tampering has been applied!");
-        })();
-    </script> -->
     <script type="module">
-      // import DeviceIntelligence   from 'https://vssdk-prod.cashfree.com/device-intel-js-sdk/0.0.1/index.mjs'
-      
-      import DeviceIntelligence   from './index.mjs'
-      
-      const { getBrowserData, getRiskData,getEncodedDeviceData }=DeviceIntelligence
+      import DeviceIntelligence from './index.mjs';
 
-      let browserInfo = {
+      const { getDeviceData, getRiskData, getEncodedBrowserData } = DeviceIntelligence;
+
+      const browserInfo = {
         device_type: 'Screen Information either mobile or desktop',
         cookie_hash: 'Hash of Browser Cookies',
         device_hash: 'Unique Identifier for Browser',
@@ -78,98 +40,91 @@
         installed_fonts: 'Browser Installed Fonts',
         installed_plugins: 'Browser Installed Plugins',
         battery_percentage: 'Device Battery Percentage',
-        gpu_renderer: 'GPU Information',
-        canvas_device_fingerprint: 'Canvas device finger print',
-        private_browser: 'Private browser detection',
-        web_rtc_ips: 'Web RTC ips',
-        audio_fingerprint: 'Audio finger print',
-        architecture: 'Architecture',
-        is_dev_tool_open: 'Is Dev tool open',
-      }
-
-      let riskInfo = {
-        installed_bots: 'check bots installed or not',
-        high_activity: 'check the device activity',
-        // vpn_time_zone_mismatch_ist: 'VPN Detection:Time Zone Mismatch',
         user_ip: 'User IP',
-        tampering_detection: 'Tampering activities have been detected',
-        virtual_machine_detection: 'Virtaul machine detection',
-        privacy_settings: 'Privacy settings',
-        privacy_browsers: 'Privacy browsers (Tor Exit Node)',
         visitor_id: 'Unique Visitor Id',
         session_id: 'Unique Session Id',
-        browser_anti_finger_printing_extension:
-          'Browser Anti Finger Printing Extension',
+        architecture: 'Architecture',
         internet_type: 'Wi-Fi (public/private), Mobile, LAN',
-      }
+      };
+
+      const riskInfo = {
+        installed_bots: 'Check bots installed',
+        high_activity: 'Check the device activity',
+        tampering_detection: 'Tampering activities have been detected',
+        virtual_machine_detection: 'Virtual machine detection',
+        privacy_settings: 'Privacy settings',
+        privacy_browsers: 'Privacy browsers (Tor Exit Node)',
+        browser_anti_finger_printing_extension: 'Browser Anti Finger Printing Extension',
+        gpu_renderer: 'GPU Information',
+        canvas_device_fingerprint: 'Canvas device fingerprint',
+        private_browser: 'Private browser detection',
+        web_rtc_ips: 'Web RTC IPs',
+        audio_fingerprint: 'Audio fingerprint',
+        is_dev_tool_open: 'Is Dev tool open',
+      };
 
       async function fetchData() {
         try {
-          let browserData = await getBrowserData()
-          let tableBody = document.getElementById('data-table')
+          // Browser Data Table
+          let browserData = await getDeviceData(100, 400);
+          let browserTableBody = document.getElementById('browser-data-table');
+
           for (const key in browserData) {
-            let tr = document.createElement('tr')
-            let td1 = document.createElement('td')
-            let td2 = document.createElement('td')
-            let td3 = document.createElement('td')
-            td1.appendChild(document.createTextNode(key))
-            td2.appendChild(document.createTextNode(browserInfo[key]))
-            td3.appendChild(document.createTextNode(browserData[key]))
-            tr.appendChild(td1)
-            tr.appendChild(td2)
-            tr.appendChild(td3)
-            tableBody.appendChild(tr)
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            td1.appendChild(document.createTextNode(key));
+            td2.appendChild(document.createTextNode(browserData[key]));
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            browserTableBody.appendChild(tr);
           }
 
-          let riskData = await getRiskData()
+          // Risk Data Table
+          let riskData = await getRiskData();
+          let riskTableBody = document.getElementById('risk-data-table');
 
-          let riskTableBody = document.getElementById('risk-data-table')
           for (const key in riskData) {
-            let tr = document.createElement('tr')
-            let td1 = document.createElement('td')
-            let td2 = document.createElement('td')
-            let td3 = document.createElement('td')
-            td1.appendChild(document.createTextNode(key))
-            td2.appendChild(document.createTextNode(riskInfo[key] || 'N/A'))
-            td3.appendChild(document.createTextNode(riskData[key]))
-            tr.appendChild(td1)
-            tr.appendChild(td2)
-            tr.appendChild(td3)
-            riskTableBody.appendChild(tr)
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            td1.appendChild(document.createTextNode(key));
+            td2.appendChild(document.createTextNode(riskData[key]));
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            riskTableBody.appendChild(tr);
           }
 
-          const dataBase64=await getEncodedDeviceData()
-
+          const dataBase64 = await getEncodedBrowserData(100, 400);
+          console.log(dataBase64, 'dataBase64');
         } catch (error) {
-          console.error('Error fetching data:', error)
+          console.error('Error fetching data:', error);
         }
       }
 
-      window.onload = fetchData
+      window.onload = fetchData;
     </script>
   </head>
   <body>
     <div class="container mt-2">
-      <h2>VRS Data</h2>
-      <!-- VRS Info Table -->
+      <h2>Browser Data</h2>
+      <!-- Browser Data Table -->
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
             <th scope="col">Key</th>
-            <th scope="col">Info</th>
             <th scope="col">Value</th>
           </tr>
         </thead>
-        <tbody id="data-table"></tbody>
+        <tbody id="browser-data-table"></tbody>
       </table>
 
-      <!-- Risk Data Table -->
       <h2>Risk Data</h2>
+      <!-- Risk Data Table -->
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
             <th scope="col">Key</th>
-            <th scope="col">Info</th>
             <th scope="col">Value</th>
           </tr>
         </thead>
