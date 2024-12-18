@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+  <!-- <head> -->
+    
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,7 +21,7 @@
           }
 
           console.log('Fetching Browser Data...')
-          let combinedData = await getBrowserData(340, 500)
+          let combinedData = await getBrowserData(500, 500)
           console.log('Combined Browser and Risk Data:', combinedData)
 
           let tableBody = document.getElementById('browser-data-table')
