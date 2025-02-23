@@ -1,79 +1,161 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Device Intelligence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error-message {
+            display: none;
+            color: #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .data-row {
+                display: block;
+                margin-bottom: 8px;
+                padding: 12px;
+                background: #fff;
+                border: 1px solid #dee2e6;
+                border-radius: 4px;
+            }
+            
+            .property-cell, .value-cell {
+                display: block;
+                width: 100%;
+            }
+            
+            .value-cell {
+                margin-top: 4px;
+                font-weight: 500;
+            }
+        }
+
+        @media screen and (min-width: 769px) {
+            .data-row {
+                display: flex;
+                padding: 12px;
+                border: 1px solid #dee2e6;
+                margin-bottom: 8px;
+                background: #fff;
+                border-radius: 4px;
+            }
+
+            .property-cell {
+                width: 40%;
+                padding-right: 16px;
+            }
+
+            .value-cell {
+                width: 60%;
+                font-weight: 500;
+            }
+        }
+
+        .execution-time {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            margin-bottom: 16px;
+        }
+    </style>
     <script type="module">
-      import DeviceIntelligence from './index.mjs';
+        import DeviceIntelligence from './index.mjs'
 
-      const { getBrowserData } = DeviceIntelligence || {};
+        const { getBrowserData, getDeviceData, getRiskData } = DeviceIntelligence || {}
 
-      async function fetchData() {
-        try {
-          if (!getBrowserData) {
-            throw new Error('getBrowserData function is not available!');
-          }
+        async function fetchAndDisplayData() {
+            try {
+                if (!getBrowserData) {
+                    throw new Error('getBrowserData function is not available!')
+                }
 
-          const start = performance.now(); // Start the timer
+                const start = performance.now()
 
-          let combinedData = await getBrowserData(160, 300);
+                let combinedData = await getBrowserData(300, 800, {})
 
-          if (combinedData) {
-            const end = performance.now(); // End the timer
-            console.log(
-              `getBrowserData execution time: ${(end - start).toFixed(2)} ms`,
-            );
-          }
-
-          let tableBody = document.getElementById('browser-data-table');
-          tableBody.innerHTML = ''; // Clear existing rows
-
-          for (const key in combinedData) {
-            let tr = document.createElement('tr');
-            tr.style.marginTop = '1rem'; // Add spacing between rows
-            tr.style.padding = '0.5rem'; // Add padding within cells
-            tr.innerHTML = `
-              <td style="padding: 0.5rem;">${key}</td>
-              <td style="padding: 0.5rem;">${combinedData[key]}</td>
-            `;
-            tableBody.appendChild(tr);
-          }
-        } catch (error) {
-          console.error('Error fetching data:', error);
+                if (combinedData) {
+                    const end = performance.now()
+                    const executionTime = `${(end - start).toFixed(2)} ms`
+                    
+                    // Remove execution_time from combinedData if it exists
+                    const { execution_time, ...remainingData } = combinedData
+                    
+                    // Update display with separate execution time
+                    updateDisplay(remainingData, executionTime)
+                }
+                
+                const button = document.getElementById('fetch-data-button')
+                if (button) {
+                    button.disabled = false
+                    button.innerHTML = 'Refresh Data'
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error)
+                showError(error.message)
+            }
         }
-      }
 
-      // Attach fetchData function to the button after DOM is fully loaded
-      window.addEventListener('DOMContentLoaded', () => {
-        const button = document.getElementById('fetch-data-button');
-        if (button) {
-          button.addEventListener('click', fetchData);
-        } else {
-          console.error('Button not found!');
+        function updateDisplay(data, executionTime) {
+            const container = document.getElementById('data-container')
+            container.innerHTML = '' // Clear existing content
+
+            // Add execution time at the top
+            const executionTimeDiv = document.createElement('div')
+            executionTimeDiv.className = 'data-row execution-time'
+            executionTimeDiv.innerHTML = `
+                <div class="property-cell">execution_time</div>
+                <div class="value-cell">${executionTime}</div>
+            `
+            container.appendChild(executionTimeDiv)
+
+            // Add remaining data
+            for (const key in data) {
+                const div = document.createElement('div')
+                div.className = 'data-row'
+                div.innerHTML = `
+                    <div class="property-cell">${key}</div>
+                    <div class="value-cell">${data[key]}</div>
+                `
+                container.appendChild(div)
+            }
         }
-      });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message')
+            errorDiv.textContent = `Error: ${message}`
+            errorDiv.style.display = 'block'
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayData()
+
+            const button = document.getElementById('fetch-data-button')
+            if (button) {
+                button.addEventListener('click', () => {
+                    button.disabled = true
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...'
+                    fetchAndDisplayData()
+                })
+            }
+        })
     </script>
-  </head>
-  <body>
-    <div class="container mt-2">
-      <h2>Combined Browser and Risk Data</h2>
-      <!-- Button to Trigger Data Fetch -->
-      <button id="fetch-data-button" class="btn btn-primary" style="margin-bottom: 1rem;">
-        Fetch Data
-      </button>
-      <!-- Data Table -->
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Key</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody id="browser-data-table"></tbody>
-      </table>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div id="error-message" class="error-message"></div>
+        
+        <button id="fetch-data-button" class="btn btn-primary mb-4 w-100">
+            <span class="spinner-border spinner-border-sm me-2"></span>Loading...
+        </button>
+
+        <div id="data-container"></div>
     </div>
-  </body>
+</body>
 </html>
