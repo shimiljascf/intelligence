@@ -17,6 +17,18 @@
             border-radius: 4px;
         }
 
+        .options-container {
+            background: #fff;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            margin-bottom: 16px;
+        }
+
+        .timeout-input {
+            width: 120px;
+        }
+
         @media screen and (max-width: 768px) {
             .data-row {
                 display: block;
@@ -66,7 +78,7 @@
         }
     </style>
     <script type="module">
-        import DeviceIntelligence from './index.mjs'
+        import DeviceIntelligence from '../dist/index.mjs'
 
         const { getBrowserData, getDeviceData, getRiskData } = DeviceIntelligence || {}
 
@@ -78,7 +90,17 @@
 
                 const start = performance.now()
 
-                let combinedData = await getBrowserData(300, 800, {})
+                // Get values from inputs
+                const taskTimeout = parseInt(document.getElementById('taskTimeout').value) || 100
+                const overallTimeout = parseInt(document.getElementById('overallTimeout').value) || 200
+                const includeUserIp = document.getElementById('includeUserIp').checked
+
+                let options = { user_ip: false}
+                if (includeUserIp) {
+                    options.user_ip = true
+                }
+
+                let combinedData = await getBrowserData(taskTimeout, overallTimeout, options)
 
                 if (combinedData) {
                     const end = performance.now()
@@ -108,11 +130,11 @@
 
             // Add execution time at the top
             const executionTimeDiv = document.createElement('div')
-            executionTimeDiv.className = 'data-row execution-time'
-            executionTimeDiv.innerHTML = `
-                <div class="property-cell">execution_time</div>
-                <div class="value-cell">${executionTime}</div>
-            `
+            // executionTimeDiv.className = 'data-row execution-time'
+            // executionTimeDiv.innerHTML = `
+            //     <div class="property-cell">execution_time</div>
+            //     <div class="value-cell">${executionTime}</div>
+            // `
             container.appendChild(executionTimeDiv)
 
             // Add remaining data
@@ -149,6 +171,33 @@
 </head>
 <body class="bg-light">
     <div class="container py-4">
+        <div class="options-container">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="taskTimeout" class="col-form-label">Task Timeout (ms):</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="taskTimeout" class="form-control timeout-input" value="100" min="0">
+                </div>
+                
+                <div class="col-auto">
+                    <label for="overallTimeout" class="col-form-label">Overall Timeout (ms):</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="overallTimeout" class="form-control timeout-input" value="200" min="0">
+                </div>
+                
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeUserIp">
+                        <label class="form-check-label" for="includeUserIp">
+                            Include User IP
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="error-message" class="error-message"></div>
         
         <button id="fetch-data-button" class="btn btn-primary mb-4 w-100">
