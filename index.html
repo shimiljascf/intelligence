@@ -93,12 +93,26 @@
                 // Get values from inputs
                 const taskTimeout = parseInt(document.getElementById('taskTimeout').value) || 100
                 const overallTimeout = parseInt(document.getElementById('overallTimeout').value) || 200
+                
+                // Get all checkbox values
                 const includeUserIp = document.getElementById('includeUserIp').checked
+                const includeArchitecture = document.getElementById('includeArchitecture').checked
+                const includeGpuRenderer = document.getElementById('includeGpuRenderer').checked
+                const includeInstalledFonts = document.getElementById('includeInstalledFonts').checked
+                const includeInstalledPlugins = document.getElementById('includeInstalledPlugins').checked
+                const includeScreenWidth = document.getElementById('includeScreenWidth').checked
+                const includeScreenHeight = document.getElementById('includeScreenHeight').checked
 
-                let options = { user_ip: false}
-                if (includeUserIp) {
-                    options.user_ip = true
+                let options = {
+                    user_ip: includeUserIp,
+                    architecture: includeArchitecture,
+                    gpu_renderer: includeGpuRenderer,
+                    installed_fonts: includeInstalledFonts,
+                    installed_plugins: includeInstalledPlugins,
+                    screen_width: includeScreenWidth,
+                    screen_height: includeScreenHeight
                 }
+                console.log(options,"options")
 
                 let combinedData = await getBrowserData(taskTimeout, overallTimeout, options)
 
@@ -130,11 +144,11 @@
 
             // Add execution time at the top
             const executionTimeDiv = document.createElement('div')
-            // executionTimeDiv.className = 'data-row execution-time'
-            // executionTimeDiv.innerHTML = `
-            //     <div class="property-cell">execution_time</div>
-            //     <div class="value-cell">${executionTime}</div>
-            // `
+            executionTimeDiv.className = 'data-row execution-time'
+            executionTimeDiv.innerHTML = `
+                <div class="property-cell">execution_time</div>
+                <div class="value-cell">${executionTime}</div>
+            `
             container.appendChild(executionTimeDiv)
 
             // Add remaining data
@@ -172,7 +186,7 @@
 <body class="bg-light">
     <div class="container py-4">
         <div class="options-container">
-            <div class="row g-3 align-items-center">
+            <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
                     <label for="taskTimeout" class="col-form-label">Task Timeout (ms):</label>
                 </div>
@@ -186,12 +200,68 @@
                 <div class="col-auto">
                     <input type="number" id="overallTimeout" class="form-control timeout-input" value="200" min="0">
                 </div>
-                
-                <div class="col-auto">
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h6>Include Options:</h6>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-6 mb-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="includeUserIp">
                         <label class="form-check-label" for="includeUserIp">
-                            Include User IP
+                            User IP
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeArchitecture">
+                        <label class="form-check-label" for="includeArchitecture">
+                            Architecture
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeGpuRenderer">
+                        <label class="form-check-label" for="includeGpuRenderer">
+                            GPU Renderer
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeInstalledFonts">
+                        <label class="form-check-label" for="includeInstalledFonts">
+                            Installed Fonts
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeInstalledPlugins">
+                        <label class="form-check-label" for="includeInstalledPlugins">
+                            Installed Plugins
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeScreenWidth">
+                        <label class="form-check-label" for="includeScreenWidth">
+                            Screen Width
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="includeScreenHeight">
+                        <label class="form-check-label" for="includeScreenHeight">
+                            Screen Height
                         </label>
                     </div>
                 </div>
