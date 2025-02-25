@@ -121,7 +121,7 @@
                     const executionTime = `${(end - start).toFixed(2)} ms`
                     
                     // Remove execution_time from combinedData if it exists
-                    const { execution_time, ...remainingData } = combinedData
+                    const {  ...remainingData } = combinedData
                     
                     // Update display with separate execution time
                     updateDisplay(remainingData, executionTime)
