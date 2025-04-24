@@ -78,7 +78,8 @@
         }
     </style>
     <script type="module">
-        import DeviceIntelligence from './index.mjs'
+        import DeviceIntelligence from 'https://vssdk-gamma.cashfree.com/device-intel-js-sdk/1.0.0/index.mjs'
+
 
         const { getBrowserData, getDeviceData, getRiskData } = DeviceIntelligence || {}
 
@@ -91,8 +92,8 @@
                 const start = performance.now()
 
                 // Get values from inputs
-                const taskTimeout = parseInt(document.getElementById('taskTimeout').value) || 100
-                const overallTimeout = parseInt(document.getElementById('overallTimeout').value) || 200
+                const taskTimeout = parseInt(document.getElementById('taskTimeout').value) || 500
+                const overallTimeout = parseInt(document.getElementById('overallTimeout').value) || 500
                 
                 // Get all checkbox values
                 const includeUserIp = document.getElementById('includeUserIp').checked
@@ -112,8 +113,6 @@
                     screen_width: includeScreenWidth,
                     screen_height: includeScreenHeight
                 }
-                console.log(options,"options")
-
                 let combinedData = await getBrowserData(taskTimeout, overallTimeout, options)
 
                 if (combinedData) {
@@ -121,7 +120,7 @@
                     const executionTime = `${(end - start).toFixed(2)} ms`
                     
                     // Remove execution_time from combinedData if it exists
-                    const {  ...remainingData } = combinedData
+                    const { execution_time, ...remainingData } = combinedData
                     
                     // Update display with separate execution time
                     updateDisplay(remainingData, executionTime)
@@ -191,14 +190,14 @@
                     <label for="taskTimeout" class="col-form-label">Task Timeout (ms):</label>
                 </div>
                 <div class="col-auto">
-                    <input type="number" id="taskTimeout" class="form-control timeout-input" value="100" min="0">
+                    <input type="number" id="taskTimeout" class="form-control timeout-input" value="500" min="0">
                 </div>
                 
                 <div class="col-auto">
                     <label for="overallTimeout" class="col-form-label">Overall Timeout (ms):</label>
                 </div>
                 <div class="col-auto">
-                    <input type="number" id="overallTimeout" class="form-control timeout-input" value="200" min="0">
+                    <input type="number" id="overallTimeout" class="form-control timeout-input" value="500" min="0">
                 </div>
             </div>
 
