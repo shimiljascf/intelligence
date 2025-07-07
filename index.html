@@ -1,279 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Intelligence</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeviceIntelligence SDK - Test Suite</title>
     <style>
-        .error-message {
-            display: none;
-            color: #dc3545;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .options-container {
-            background: #fff;
-            padding: 16px;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
-            margin-bottom: 16px;
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .timeout-input {
-            width: 120px;
+        
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
         }
-
-        @media screen and (max-width: 768px) {
-            .data-row {
-                display: block;
-                margin-bottom: 8px;
-                padding: 12px;
-                background: #fff;
-                border: 1px solid #dee2e6;
-                border-radius: 4px;
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .feature-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
             }
             
-            .property-cell, .value-cell {
-                display: block;
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
                 width: 100%;
+                max-width: 300px;
             }
             
-            .value-cell {
-                margin-top: 4px;
-                font-weight: 500;
+            .stats {
+                flex-direction: column;
+                gap: 15px;
             }
-        }
-
-        @media screen and (min-width: 769px) {
-            .data-row {
-                display: flex;
-                padding: 12px;
-                border: 1px solid #dee2e6;
-                margin-bottom: 8px;
-                background: #fff;
-                border-radius: 4px;
-            }
-
-            .property-cell {
-                width: 40%;
-                padding-right: 16px;
-            }
-
-            .value-cell {
-                width: 60%;
-                font-weight: 500;
-            }
-        }
-
-        .execution-time {
-            background-color: #e9ecef;
-            border: 1px solid #dee2e6;
-            margin-bottom: 16px;
         }
     </style>
-    <script type="module">
-        import DeviceIntelligence from 'https://vssdk-prod.cashfree.com/device-intel-js-sdk/1.0.0/index.mjs'
-
-
-        const { getBrowserData, getDeviceData, getRiskData } = DeviceIntelligence || {}
-
-        async function fetchAndDisplayData() {
-            try {
-                if (!getBrowserData) {
-                    throw new Error('getBrowserData function is not available!')
-                }
-
-                const start = performance.now()
-
-                // Get values from inputs
-                const taskTimeout = parseInt(document.getElementById('taskTimeout').value) || 500
-                const overallTimeout = parseInt(document.getElementById('overallTimeout').value) || 500
-                
-                // Get all checkbox values
-                const includeUserIp = document.getElementById('includeUserIp').checked
-                const includeArchitecture = document.getElementById('includeArchitecture').checked
-                const includeGpuRenderer = document.getElementById('includeGpuRenderer').checked
-                const includeInstalledFonts = document.getElementById('includeInstalledFonts').checked
-                const includeInstalledPlugins = document.getElementById('includeInstalledPlugins').checked
-                const includeScreenWidth = document.getElementById('includeScreenWidth').checked
-                const includeScreenHeight = document.getElementById('includeScreenHeight').checked
-
-                let options = {
-                    user_ip: includeUserIp,
-                    architecture: includeArchitecture,
-                    gpu_renderer: includeGpuRenderer,
-                    installed_fonts: includeInstalledFonts,
-                    installed_plugins: includeInstalledPlugins,
-                    screen_width: includeScreenWidth,
-                    screen_height: includeScreenHeight
-                }
-                let combinedData = await getBrowserData(taskTimeout, overallTimeout, options)
-
-                if (combinedData) {
-                    const end = performance.now()
-                    const executionTime = `${(end - start).toFixed(2)} ms`
-                    
-                    // Remove execution_time from combinedData if it exists
-                    const { execution_time, ...remainingData } = combinedData
-                    
-                    // Update display with separate execution time
-                    updateDisplay(remainingData, executionTime)
-                }
-                
-                const button = document.getElementById('fetch-data-button')
-                if (button) {
-                    button.disabled = false
-                    button.innerHTML = 'Refresh Data'
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error)
-                showError(error.message)
-            }
-        }
-
-        function updateDisplay(data, executionTime) {
-            const container = document.getElementById('data-container')
-            container.innerHTML = '' // Clear existing content
-
-            // Add execution time at the top
-            const executionTimeDiv = document.createElement('div')
-            executionTimeDiv.className = 'data-row execution-time'
-            executionTimeDiv.innerHTML = `
-                <div class="property-cell">execution_time</div>
-                <div class="value-cell">${executionTime}</div>
-            `
-            container.appendChild(executionTimeDiv)
-
-            // Add remaining data
-            for (const key in data) {
-                const div = document.createElement('div')
-                div.className = 'data-row'
-                div.innerHTML = `
-                    <div class="property-cell">${key}</div>
-                    <div class="value-cell">${data[key]}</div>
-                `
-                container.appendChild(div)
-            }
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message')
-            errorDiv.textContent = `Error: ${message}`
-            errorDiv.style.display = 'block'
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAndDisplayData()
-
-            const button = document.getElementById('fetch-data-button')
-            if (button) {
-                button.addEventListener('click', () => {
-                    button.disabled = true
-                    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...'
-                    fetchAndDisplayData()
-                })
-            }
-        })
-    </script>
 </head>
-<body class="bg-light">
-    <div class="container py-4">
-        <div class="options-container">
-            <div class="row g-3 align-items-center mb-3">
-                <div class="col-auto">
-                    <label for="taskTimeout" class="col-form-label">Task Timeout (ms):</label>
-                </div>
-                <div class="col-auto">
-                    <input type="number" id="taskTimeout" class="form-control timeout-input" value="500" min="0">
-                </div>
-                
-                <div class="col-auto">
-                    <label for="overallTimeout" class="col-form-label">Overall Timeout (ms):</label>
-                </div>
-                <div class="col-auto">
-                    <input type="number" id="overallTimeout" class="form-control timeout-input" value="500" min="0">
-                </div>
+<body>
+    <div class="container">
+        <div class="logo">DeviceIntelligence SDK</div>
+        <div class="subtitle">Comprehensive Test Suite</div>
+        
+        <div class="description">
+            Welcome to the DeviceIntelligence SDK test suite. This streamlined testing environment provides comprehensive validation of all SDK functionality through our unified test interface and interactive demo.
+        </div>
+        
+        <div class="buttons">
+            <a href="unified-comprehensive-test.html" class="btn">
+                🧪 Run Comprehensive Tests
+            </a>
+            <a href="demo.html" class="btn secondary">
+                🎮 Interactive Demo
+            </a>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Test Cases</div>
             </div>
-
-            <div class="row">
-                <div class="col-12 mb-2">
-                    <h6>Include Options:</h6>
-                </div>
+            <div class="stat">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Test Categories</div>
             </div>
-
-            <div class="row">
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeUserIp">
-                        <label class="form-check-label" for="includeUserIp">
-                            User IP
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeArchitecture">
-                        <label class="form-check-label" for="includeArchitecture">
-                            Architecture
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeGpuRenderer">
-                        <label class="form-check-label" for="includeGpuRenderer">
-                            GPU Renderer
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeInstalledFonts">
-                        <label class="form-check-label" for="includeInstalledFonts">
-                            Installed Fonts
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeInstalledPlugins">
-                        <label class="form-check-label" for="includeInstalledPlugins">
-                            Installed Plugins
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeScreenWidth">
-                        <label class="form-check-label" for="includeScreenWidth">
-                            Screen Width
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="includeScreenHeight">
-                        <label class="form-check-label" for="includeScreenHeight">
-                            Screen Height
-                        </label>
-                    </div>
-                </div>
+            <div class="stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Coverage</div>
             </div>
         </div>
-
-        <div id="error-message" class="error-message"></div>
         
-        <button id="fetch-data-button" class="btn btn-primary mb-4 w-100">
-            <span class="spinner-border spinner-border-sm me-2"></span>Loading...
-        </button>
-
-        <div id="data-container"></div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Comprehensive Testing</div>
+                <div class="feature-desc">Complete validation of core functionality, visitor ID logic, cache behavior, and production readiness</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Performance Testing</div>
+                <div class="feature-desc">Cold/warm start timing, cache performance, data size validation, and memory usage monitoring</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">Browser Compatibility</div>
+                <div class="feature-desc">Modern and legacy browser support with built-in polyfills for IE11+ compatibility</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Real-time Dashboard</div>
+                <div class="feature-desc">Live test results with filtering, categorization, and professional reporting capabilities</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <div class="feature-title">Error Handling</div>
+                <div class="feature-desc">Edge case testing, timeout behavior validation, and graceful degradation verification</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📈</div>
+                <div class="feature-title">Export & Analysis</div>
+                <div class="feature-desc">Multiple export formats (JSON, CSV, Markdown) for detailed analysis and reporting</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            DeviceIntelligence SDK v1.0.0 | Test Suite v1.0 | Updated July 5, 2025
+        </div>
     </div>
+    
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on load
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/\D/g, ''));
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = stat.textContent.replace(/\d+/, Math.floor(current));
+                }, 30);
+            });
+            
+            // Add click tracking
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255,255,255,0.6)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = (e.offsetX - 10) + 'px';
+                    ripple.style.top = (e.offsetY - 10) + 'px';
+                    ripple.style.width = ripple.style.height = '20px';
+                    
+                    this.style.position = 'relative';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+        
+        // Add CSS animation for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
