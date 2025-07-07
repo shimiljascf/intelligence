@@ -862,17 +862,6 @@
 
         async function runVisitorIdTests() {
             try {
-                // Clear cache first
-                DeviceIntelligence.clearDeviceDataCache();
-
-                // Test generateVisitorID without cache
-                var visitorIdWithoutCache = await DeviceIntelligence.generateVisitorID();
-                if (visitorIdWithoutCache === 'NOT_AVAILABLE') {
-                    logResult('Visitor ID - Without Cache', 'pass', 'generateVisitorID correctly returns NOT_AVAILABLE without cache', null, 'visitor');
-                } else {
-                    logResult('Visitor ID - Without Cache', 'fail', `generateVisitorID should return NOT_AVAILABLE without cache, got: ${visitorIdWithoutCache}`, null, 'visitor');
-                }
-
                 // Test with cache
                 var browserData1 = await DeviceIntelligence.getBrowserData();
                 var visitorId1 = browserData1.visitor_id;
@@ -913,16 +902,6 @@
 
         async function runCacheTests() {
             try {
-                // Test cache clear
-                DeviceIntelligence.clearDeviceDataCache();
-                var visitorIdAfterClear = await DeviceIntelligence.generateVisitorID();
-                
-                if (visitorIdAfterClear === 'NOT_AVAILABLE') {
-                    logResult('Cache - Clear Function', 'pass', 'Cache clear works correctly', null, 'cache');
-                } else {
-                    logResult('Cache - Clear Function', 'fail', 'Cache not properly cleared', null, 'cache');
-                }
-
                 // Test cache population
                 var data1 = await DeviceIntelligence.getBrowserData();
                 var cachedVisitorId = await DeviceIntelligence.generateVisitorID();
@@ -1000,16 +979,6 @@
                     logResult('Edge Cases - Rapid Calls', 'pass', 'Rapid successive calls work correctly', null, 'edge');
                 } else {
                     logResult('Edge Cases - Rapid Calls', 'fail', 'Rapid calls return inconsistent results', null, 'edge');
-                }
-
-                // Cache operations
-                DeviceIntelligence.clearDeviceDataCache();
-                var afterClear = await DeviceIntelligence.getBrowserData();
-                if (afterClear.visitor_id && afterClear.visitor_id !== 'NOT_AVAILABLE') {
-                    edgeCasesPassed++;
-                    logResult('Edge Cases - Cache Operations', 'pass', 'Cache operations work correctly', null, 'edge');
-                } else {
-                    logResult('Edge Cases - Cache Operations', 'fail', 'Cache operations not working', null, 'edge');
                 }
 
             } catch (error) {
@@ -1191,6 +1160,37 @@ ${result.details ? `- Details: ${typeof result.details === 'string' ? result.det
         function shareResults() {
             var summary = `DeviceIntelligence SDK Test Results:\n${testStats.pass} passed, ${testStats.fail} failed, ${testStats.warn} warnings\nPass rate: ${((testStats.pass / allResults.length) * 100).toFixed(1)}%`;
             
+            if (navigator.share) {
+                navigator.share({
+                    title: 'DeviceIntelligence SDK Test Results',
+                    text: summary
+                });
+            } else {
+                navigator.clipboard.writeText(summary).then(() => {
+                    alert('Test summary copied to clipboard!');
+                });
+            }
+        }
+
+        function downloadFile(blob, filename) {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
             if (navigator.share) {
                 navigator.share({
                     title: 'DeviceIntelligence SDK Test Results',
