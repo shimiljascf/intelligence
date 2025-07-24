@@ -274,14 +274,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Set default checkbox states (all disabled by default)
-            document.getElementById('includeUserIp').checked = false
-            document.getElementById('includeArchitecture').checked = false
-            document.getElementById('includeGpuRenderer').checked = false
-            document.getElementById('includeInstalledFonts').checked = false
-            document.getElementById('includeInstalledPlugins').checked = false
-            document.getElementById('includeScreenWidth').checked = false
-            document.getElementById('includeScreenHeight').checked = false
+            // Set default checkbox states (all enabled by default)
+            document.getElementById('includeUserIp').checked = true
+            document.getElementById('includeArchitecture').checked = true
+            document.getElementById('includeGpuRenderer').checked = true
+            document.getElementById('includeInstalledFonts').checked = true
+            document.getElementById('includeInstalledPlugins').checked = true
+            document.getElementById('includeScreenWidth').checked = true
+            document.getElementById('includeScreenHeight').checked = true
 
             // Initialize the agent and fetch data
             initializeAgent().then(() => {
