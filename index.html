@@ -176,6 +176,7 @@
                     const { execution_time, ...remainingData } = combinedData
                     updateDisplay(remainingData, executionTime, useLegacyAPI)
                 }
+                console.log('Data fetched successfully:', combinedData)
             } catch (error) {
                 console.error('Error fetching data:', error)
                 showError(error.message)
