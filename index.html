@@ -183,9 +183,36 @@
             }
         }
 
+        // FingerprintJS visitorId storage
+        let fingerprintVisitorId = null
+
+        // Load FingerprintJS and get visitorId
+        import('https://openfpcdn.io/fingerprintjs/v4')
+            .then(FingerprintJS => FingerprintJS.load())
+            .then(fp => fp.get())
+            .then(result => {
+                fingerprintVisitorId = result.visitorId
+                console.log('FingerprintJS visitorId:', fingerprintVisitorId)
+                // Optionally refresh display if data is already shown
+                if (window.lastDisplayedData) {
+                    updateDisplay(window.lastDisplayedData.data, window.lastDisplayedData.executionTime, window.lastDisplayedData.useLegacyAPI)
+                }
+            })
+
         function updateDisplay(data, executionTime, useLegacyAPI = false) {
             const container = document.getElementById('data-container')
             container.innerHTML = '' // Clear existing content
+
+            // Add FingerprintJS visitorId row if available
+            if (fingerprintVisitorId) {
+                const fpDiv = document.createElement('div')
+                fpDiv.className = 'data-row'
+                fpDiv.innerHTML = `
+                    <div class="property-cell"><strong>FingerprintJS visitorId</strong></div>
+                    <div class="value-cell" style="color:#007bff;font-weight:bold;">${fingerprintVisitorId}</div>
+                `
+                container.appendChild(fpDiv)
+            }
 
             // Add API type indicator
             const apiTypeDiv = document.createElement('div')
@@ -226,6 +253,9 @@
                 `
                 container.appendChild(div)
             }
+
+            // Store last displayed data for refresh
+            window.lastDisplayedData = { data, executionTime, useLegacyAPI }
         }
 
         function formatValue(value) {
