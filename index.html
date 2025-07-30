@@ -313,15 +313,19 @@
             document.getElementById('includeScreenWidth').checked = true
             document.getElementById('includeScreenHeight').checked = true
 
-            // Initialize the agent and fetch data
-            initializeAgent().then(() => {
-                fetchAndDisplayData()
-            }).catch(error => {
+            // Initialize the agent on page load (but don't fetch data automatically)
+            initializeAgent().catch(error => {
                 console.error('Failed to initialize on page load:', error)
                 showError('Failed to initialize SDK: ' + error.message)
             })
 
-            // Add event listeners for API type change
+            // Add event listener for the Get Data button
+            const getDataButton = document.getElementById('getDataButton')
+            if (getDataButton) {
+                getDataButton.addEventListener('click', fetchAndDisplayData)
+            }
+
+            // Add event listeners for API type change (but don't auto-fetch)
             const legacyApiCheckbox = document.getElementById('useLegacyAPI')
             const debugCheckbox = document.getElementById('debugMode')
             
@@ -330,7 +334,6 @@
                     if (!legacyApiCheckbox.checked) {
                         initializeAgent()
                     }
-                    fetchAndDisplayData()
                 })
             }
 
@@ -339,7 +342,6 @@
                     if (!legacyApiCheckbox.checked) {
                         initializeAgent()
                     }
-                    fetchAndDisplayData()
                 })
             }
         })
@@ -454,6 +456,14 @@
                             Screen Height
                         </label>
                     </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <button id="getDataButton" class="btn btn-primary btn-lg">
+                        Get Device Intelligence Data
+                    </button>
                 </div>
             </div>
         </div>
